@@ -659,6 +659,70 @@ text-warning-default / bg-warning-light     border-border-divider
 <Button disabled>Disabled</Button>`,
   },
   {
+    slug: "destructive-button",
+    name: "Destructive Button",
+    description:
+      "The danger-token Button for delete/remove. Two styles — destructive (solid red) and destructive-secondary (white glass, red text + red icon) — across all Button sizes, with or without an icon.",
+    preview: (
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-wrap items-center gap-4">
+          <Button variant="destructive" size="lg">
+            <Trash />
+            Delete
+          </Button>
+          <Button variant="destructive" size="md">
+            Delete
+          </Button>
+          <Button variant="destructive" size="sm">
+            <Trash />
+            Delete
+          </Button>
+          <Button variant="destructive" size="icon-md" aria-label="Delete">
+            <Trash />
+          </Button>
+          <Button variant="destructive" size="lg" disabled>
+            Delete
+          </Button>
+        </div>
+        <div className="flex flex-wrap items-center gap-4">
+          <Button variant="destructive-secondary" size="lg">
+            <Trash />
+            Delete
+          </Button>
+          <Button variant="destructive-secondary" size="md">
+            Delete
+          </Button>
+          <Button variant="destructive-secondary" size="sm">
+            <Trash />
+            Delete
+          </Button>
+          <Button
+            variant="destructive-secondary"
+            size="icon-md"
+            aria-label="Delete"
+          >
+            <Trash />
+          </Button>
+          <Button variant="destructive-secondary" size="lg" disabled>
+            Delete
+          </Button>
+        </div>
+      </div>
+    ),
+    code: `import { Button } from "@/components/ui/button";
+import { Trash } from "@phosphor-icons/react";
+
+{/* Solid red (mirrors primary) */}
+<Button variant="destructive" size="lg"><Trash />Delete</Button>
+<Button variant="destructive" size="md">Delete</Button>
+<Button variant="destructive" size="sm"><Trash />Delete</Button>
+<Button variant="destructive" size="icon-md" aria-label="Delete"><Trash /></Button>
+
+{/* White glass, red text + red icon (mirrors secondary) */}
+<Button variant="destructive-secondary" size="lg"><Trash />Delete</Button>
+<Button variant="destructive-secondary" size="icon-md"><Trash /></Button>`,
+  },
+  {
     slug: "switch",
     name: "Switch",
     description: "Segmented toggle with a gradient active pill.",

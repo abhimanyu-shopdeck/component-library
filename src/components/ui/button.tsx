@@ -23,6 +23,14 @@ const buttonVariants = cva(
         // Ghost — transparent, brand-coloured text; subtle tint on hover/press.
         ghost:
           "text-brand-primary hover:bg-brand-primary/10 active:bg-brand-primary/10 disabled:bg-transparent disabled:text-text-disabled",
+        // Destructive — solid danger red, white text + white icon, teal inner
+        // stroke (mirrors primary). Hover warms to a red gradient; disabled fades.
+        destructive:
+          "bg-danger text-white shadow-[0px_5px_5px_rgba(0,0,0,0.1),inset_0px_0px_1px_0px_var(--accent-teal)] hover:bg-[linear-gradient(93deg,#ff847b_3%,#f44336_99%)] active:bg-[linear-gradient(93deg,#ff847b_3%,#f44336_99%)] disabled:bg-none disabled:bg-[#ffd9d9] disabled:text-white disabled:shadow-none",
+        // Destructive secondary — white "glass" surface, danger-red text + red
+        // icon (mirrors secondary). For a subtler delete/remove action.
+        "destructive-secondary":
+          "border border-white bg-white/60 text-danger shadow-[0px_5px_10px_rgba(0,0,0,0.05)] hover:bg-white hover:shadow-[0px_5px_5px_rgba(0,0,0,0.05)] active:bg-white active:shadow-[0px_5px_5px_rgba(0,0,0,0.05)] disabled:border-transparent disabled:bg-white disabled:text-[#ffd9d9] disabled:shadow-none",
       },
       size: {
         lg: "rounded-lg p-3 text-[13px]",
