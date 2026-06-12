@@ -34,6 +34,8 @@ import { RoundButton } from "@/components/ui/round-button";
 import { Dropdown } from "@/components/ui/dropdown";
 import { SelectorPill } from "@/components/ui/selector-pill";
 import { Pill } from "@/components/ui/pill";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup } from "@/components/ui/radio-group";
 import { SectionTitle } from "@/components/ui/section-title";
 import { TextField, SelectField } from "@/components/ui/text-field";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
@@ -104,6 +106,45 @@ const ICONS: { Icon: Icon; name: string }[] = [
   { Icon: Sparkle, name: "Sparkle" },
   { Icon: Trash, name: "Trash" },
 ];
+
+function CheckboxDemo() {
+  const [items, setItems] = React.useState({ gst: true, terms: false });
+  return (
+    <div className="flex flex-col items-start gap-4">
+      <div className="flex items-center gap-6">
+        <Checkbox defaultChecked={false} aria-label="Unchecked" />
+        <Checkbox defaultChecked aria-label="Checked" />
+        <Checkbox defaultChecked disabled aria-label="Disabled checked" />
+      </div>
+      <Checkbox
+        checked={items.gst}
+        onCheckedChange={(v) => setItems((s) => ({ ...s, gst: v }))}
+        label="I have a GST number"
+      />
+      <Checkbox
+        checked={items.terms}
+        onCheckedChange={(v) => setItems((s) => ({ ...s, terms: v }))}
+        label="Agree to terms & conditions"
+      />
+    </div>
+  );
+}
+
+function RadioDemo() {
+  const [value, setValue] = React.useState("sole");
+  return (
+    <RadioGroup
+      value={value}
+      onValueChange={setValue}
+      options={[
+        { label: "Sole proprietor", value: "sole" },
+        { label: "Private limited", value: "pvt" },
+        { label: "Partnership", value: "partner" },
+        { label: "Not registered yet", value: "none", disabled: true },
+      ]}
+    />
+  );
+}
 
 function SelectorPillDemo() {
   const filters = ["Action Needed", "Resolved", "Snoozed", "All"];
@@ -788,6 +829,37 @@ const [active, setActive] = useState("Action Needed");
     {f}
   </SelectorPill>
 ))}`,
+  },
+  {
+    slug: "checkbox",
+    name: "Checkbox",
+    description:
+      "Circular checkbox — grey ring → brand-primary fill + white check when selected. Controlled or uncontrolled, with an optional clickable label.",
+    preview: <CheckboxDemo />,
+    code: `import { Checkbox } from "@/components/ui/checkbox";
+
+<Checkbox defaultChecked />
+<Checkbox label="I have a GST number"
+  checked={value} onCheckedChange={setValue} />
+<Checkbox defaultChecked disabled />`,
+  },
+  {
+    slug: "radio-group",
+    name: "Radio Group",
+    description:
+      "Single-select radio list — grey ring → brand-primary ring + center dot. Controlled or uncontrolled; supports per-option disabled.",
+    preview: <RadioDemo />,
+    code: `import { RadioGroup } from "@/components/ui/radio-group";
+
+<RadioGroup
+  value={value}
+  onValueChange={setValue}
+  options={[
+    { label: "Sole proprietor", value: "sole" },
+    { label: "Private limited", value: "pvt" },
+    { label: "Not registered yet", value: "none", disabled: true },
+  ]}
+/>`,
   },
   {
     slug: "pill",

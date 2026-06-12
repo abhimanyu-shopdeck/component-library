@@ -77,6 +77,10 @@ All synced from the same Figma file (node `4267:4841`). Glass surfaces use `bg-w
   `<Pill tone="warning" icon>Go live risk</Pill>` · `<Pill surface="dark" tone="success" background={false}>Done</Pill>`
 - **`Dropdown`** — glass pill that opens a menu of options (click-outside + Esc to close). Controlled (`value`) or uncontrolled (`defaultValue`). Default leading icon = `CalendarBlank`.
   `<Dropdown options={[{label,value},…]} defaultValue="…" onValueChange={fn} />`
+- **`Checkbox`** (`@/components/ui/checkbox`) — **circular** checkbox (Figma `4809:9693`): grey ring → `brand-primary` fill + white `Check` when selected. Controlled (`checked`) or uncontrolled (`defaultChecked`), optional clickable `label`, `disabled`.
+  `<Checkbox label="I have a GST number" checked={v} onCheckedChange={fn} />`
+- **`RadioGroup`** (+ `Radio`) (`@/components/ui/radio-group`) — single-select radio list (Figma `4809:9694`): grey ring → `brand-primary` ring + center dot. Controlled (`value`) / uncontrolled (`defaultValue`); per-option `disabled`. `Radio` is the standalone circle.
+  `<RadioGroup value={v} onValueChange={fn} options={[{label,value,disabled?},…]} />`
 - **`TextField` / `SelectField`** (`@/components/ui/text-field`) — white bordered **form** inputs with a top `label`, optional `hint` (Info icon) or `error` (red border + WarningCircle message). Border states: resting `border-divider` → hover/focus/open `brand-primary` → error `danger`. `TextField` is a real `<input>` (all input props); `SelectField` is a labelled dropdown with `options` (controlled/uncontrolled, click-outside + Esc). Use these for forms; use `Dropdown` for the glass filter pill.
   `<TextField label="GSTIN" hint="15-digit" />` · `<SelectField label="Type" options={[…]} onValueChange={fn} />`
 - **`RoundButton`** — glass button; `selected` = gradient pill; hover + haptics. Sizes: `md` / `lg` (text pills) and `icon-md` / `icon-lg` (square, icon-only). Use an `icon-*` size for icon-only buttons.
