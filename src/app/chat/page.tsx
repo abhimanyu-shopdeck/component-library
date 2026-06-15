@@ -267,22 +267,26 @@ function ChatScreen() {
               />
             }
             right={
-              <span className="relative inline-flex">
-                {/* Soft red breathing halo — fades in/out over 700ms */}
+              <span className="relative inline-flex items-center justify-center">
+                {/* Pulsing light-red rings — fade in/out over 600ms */}
                 <span
                   aria-hidden
                   className={cn(
-                    "pointer-events-none absolute inset-0 rounded-[18px] transition-opacity duration-700",
-                    glow ? "animate-artifact-glow opacity-100" : "opacity-0"
+                    "pointer-events-none absolute inset-0 transition-opacity duration-500",
+                    glow ? "opacity-100" : "opacity-0"
                   )}
-                />
+                >
+                  <span className="absolute inset-0 rounded-full bg-danger/25 animate-artifact-pulse" />
+                  <span className="absolute inset-0 rounded-full bg-danger/25 animate-artifact-pulse [animation-delay:1.1s]" />
+                </span>
                 <RoundButton
                   size="icon-md"
                   aria-label="Collections"
                   onClick={() => router.push("/artifacts")}
                   className={cn(
-                    "relative [&_svg]:transition-colors [&_svg]:duration-700",
-                    glow && "[&_svg]:text-danger"
+                    "relative transition-[background-color,border-color,color,box-shadow] duration-500 [&_svg]:transition-colors [&_svg]:duration-500",
+                    glow &&
+                      "border-danger bg-danger text-white shadow-[0_6px_16px_rgba(244,67,54,0.4)] hover:bg-danger hover:shadow-[0_6px_16px_rgba(244,67,54,0.4)] [&_svg]:text-white"
                   )}
                 >
                   <SquaresFour weight={glow ? "fill" : "regular"} />

@@ -98,6 +98,8 @@
   --animate-progress-indeterminate: progress-indeterminate 1.4s ease-in-out infinite;
   /* New-artifact attention: soft red breathing glow (Collections icon) */
   --animate-artifact-glow: artifact-glow 2.6s ease-in-out infinite;
+  /* New-artifact attention: expanding light-red pulse ring (Collections icon) */
+  --animate-artifact-pulse: artifact-pulse 2.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
 @keyframes shimmer {
@@ -145,6 +147,23 @@
     box-shadow:
       0 0 0 1.5px rgba(244, 67, 54, 0.5),
       0 0 20px 6px rgba(244, 67, 54, 0.42);
+  }
+}
+
+/* Light-red ring that expands outward and fades — used behind the solid-red
+   Collections icon while a new artifact draws attention. Two staggered copies
+   make a continuous, calm ripple (no aggressive notification pulse). */
+@keyframes artifact-pulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.55;
+  }
+  70% {
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.75);
+    opacity: 0;
   }
 }
 
