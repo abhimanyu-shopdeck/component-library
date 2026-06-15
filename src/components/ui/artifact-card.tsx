@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import {
-  CheckCircle,
   HandbagSimple,
   Lock,
   MagnifyingGlass,
@@ -12,7 +11,7 @@ import {
 } from "@phosphor-icons/react";
 
 import { cn } from "@/lib/utils";
-import { Pill } from "@/components/ui/pill";
+import { ProgressBar } from "@/components/ui/progress-bar";
 
 export type ArtifactType =
   | "report"
@@ -217,46 +216,24 @@ function StorePageFull() {
   );
 }
 
-/** Status pill — in-progress (orange + dot) / completed (green + check).
-    Both icons occupy a 12px box so the two pills share identical metrics. */
-function StatusPill({ status }: { status: ArtifactStatus }) {
-  if (status === "completed")
-    return (
-      <Pill tone="success" background={false} icon={<CheckCircle weight="regular" />}>
-        Completed
-      </Pill>
-    );
-  return (
-    <Pill
-      tone="warning"
-      background={false}
-      icon={
-        <span className="flex size-3 shrink-0 items-center justify-center">
-          <span className="size-1.5 rounded-full bg-warning-default" />
-        </span>
-      }
-    >
-      In progress
-    </Pill>
-  );
-}
-
 type ArtifactCardProps = {
   type: ArtifactType;
   name: string;
   /** Relative time, e.g. "10 min ago". */
   time: string;
   status: ArtifactStatus;
-  /** 0–100, shown as an orange bar while in-progress. */
+  /** 0–100, shown on the in-progress bar. */
   progress?: number;
   onClick?: () => void;
   className?: string;
 };
 
 /**
- * A uniform artifact card for the Artifacts panel — status pill, type-specific
- * preview thumbnail, name, last-updated time, and (while generating) an orange
- * progress bar. Tapping opens the artifact preview sheet. Source: Figma `4678:22184`.
+ * Artifact card for the Collections panel. Every card has the same structure
+ * (preview thumbnail + name + time), so the layout never shifts. `completed`
+ * cards are clean and passive; only `in-progress` cards surface a live status
+ * pill + a progress bar — both *overlaid on the thumbnail*, so height is
+ * identical across states. Tapping opens the preview sheet.
  */
 function ArtifactCard({
   type,
@@ -277,27 +254,32 @@ function ArtifactCard({
         className
       )}
     >
-      <span className="flex px-0.5">
-        <StatusPill status={status} />
-      </span>
-
       <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border border-surface-muted bg-white">
         <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.03]">
           <ArtifactThumb type={type} />
         </div>
+
+        {/* Active state only — overlaid so completed cards stay clean and the
+            card height never changes. */}
+        {inProgress && (
+          <>
+            <span className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-full bg-white/90 px-2 py-0.5 type-caption text-warning-default shadow-[0px_2px_6px_rgba(0,0,0,0.08)] backdrop-blur">
+              <span className="relative flex size-1.5">
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-warning-default/70" />
+                <span className="relative inline-flex size-1.5 rounded-full bg-warning-default" />
+              </span>
+              In progress
+            </span>
+            <span className="absolute inset-x-0 bottom-0">
+              <ProgressBar value={progress} tone="orange" className="h-1 rounded-none" />
+            </span>
+          </>
+        )}
       </div>
 
-      <div className="flex flex-col gap-1 px-0.5">
+      <div className="flex flex-col gap-0.5 px-0.5">
         <h3 className="type-h3 truncate text-text-primary">{name}</h3>
         <span className="type-body-2 text-text-secondary">{time}</span>
-        {inProgress && (
-          <span className="mt-1 block h-1.5 w-full overflow-hidden rounded-full bg-surface-app">
-            <span
-              className="block h-full rounded-full bg-warning-default transition-[width] duration-500"
-              style={{ width: `${progress}%` }}
-            />
-          </span>
-        )}
       </div>
     </button>
   );
