@@ -193,25 +193,34 @@ function ChatScreen() {
     const dy = fly.y1 - fly.y0;
     const anim = el.animate(
       [
+        // appear small at the chip
         {
-          transform: `translate(${fly.x0}px, ${fly.y0}px) translate(-50%, -50%) scale(1)`,
-          opacity: 1,
+          transform: `translate(${fly.x0}px, ${fly.y0}px) translate(-50%, -50%) scale(0.9)`,
+          opacity: 0.5,
           offset: 0,
         },
+        // grow to 2x in place — makes the hand-off readable
+        {
+          transform: `translate(${fly.x0}px, ${fly.y0}px) translate(-50%, -50%) scale(2)`,
+          opacity: 1,
+          offset: 0.22,
+        },
+        // travel up the arc, still large
         {
           transform: `translate(${fly.x0 + dx * 0.5}px, ${
-            fly.y0 + dy * 0.5 - 40
-          }px) translate(-50%, -50%) scale(0.92)`,
+            fly.y0 + dy * 0.5 - 52
+          }px) translate(-50%, -50%) scale(1.8)`,
           opacity: 1,
-          offset: 0.55,
+          offset: 0.64,
         },
+        // dissolve into the Collections icon
         {
-          transform: `translate(${fly.x1}px, ${fly.y1}px) translate(-50%, -50%) scale(0.2)`,
+          transform: `translate(${fly.x1}px, ${fly.y1}px) translate(-50%, -50%) scale(0.25)`,
           opacity: 0,
           offset: 1,
         },
       ],
-      { duration: 850, easing: "cubic-bezier(0.42, 0, 0.22, 1)", fill: "forwards" }
+      { duration: 1100, easing: "cubic-bezier(0.4, 0, 0.2, 1)", fill: "forwards" }
     );
     anim.onfinish = () => {
       setFly(null);
