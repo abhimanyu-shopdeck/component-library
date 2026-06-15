@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import {
   CaretLeft,
   DownloadSimple,
+  FileXls,
   ShareNetwork,
   SquaresFour,
 } from "@phosphor-icons/react";
@@ -131,7 +132,16 @@ function ChatScreen() {
   const [typing, setTyping] = React.useState(false);
   const [glow, setGlow] = React.useState(false);
   const [reportPreview, setReportPreview] = React.useState<string | null>(null);
+  const [fly, setFly] = React.useState<{
+    x0: number;
+    y0: number;
+    x1: number;
+    y1: number;
+  } | null>(null);
   const endRef = React.useRef<HTMLDivElement>(null);
+  const frameRef = React.useRef<HTMLDivElement>(null);
+  const collectionsRef = React.useRef<HTMLSpanElement>(null);
+  const flyElRef = React.useRef<HTMLDivElement>(null);
   const idRef = React.useRef(INITIAL.length);
   const nextId = () => (idRef.current += 1);
   const glowTimer = React.useRef<number | null>(null);
@@ -148,6 +158,67 @@ function ChatScreen() {
     },
     []
   );
+
+  // "Store in Collections" micro-interaction: a replica of the report's XLS
+  // icon detaches from the chat bubble, arcs up to the Collections icon, and
+  // dissolves into it — *then* the attention glow starts.
+  const launchFlyToCollections = React.useCallback(() => {
+    const reduce = window.matchMedia?.(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    const sources = document.querySelectorAll("[data-report-fly-source]");
+    const src = sources[sources.length - 1] as HTMLElement | undefined;
+    const target = collectionsRef.current;
+    const frame = frameRef.current;
+    if (reduce || !src || !target || !frame) {
+      triggerGlow();
+      return;
+    }
+    const s = src.getBoundingClientRect();
+    const t = target.getBoundingClientRect();
+    const f = frame.getBoundingClientRect();
+    setFly({
+      x0: s.left + s.width / 2 - f.left,
+      y0: s.top + s.height / 2 - f.top,
+      x1: t.left + t.width / 2 - f.left,
+      y1: t.top + t.height / 2 - f.top,
+    });
+  }, [triggerGlow]);
+
+  // Run the flight (Web Animations API) once `fly` coords are set.
+  React.useEffect(() => {
+    const el = flyElRef.current;
+    if (!fly || !el) return;
+    const dx = fly.x1 - fly.x0;
+    const dy = fly.y1 - fly.y0;
+    const anim = el.animate(
+      [
+        {
+          transform: `translate(${fly.x0}px, ${fly.y0}px) translate(-50%, -50%) scale(1)`,
+          opacity: 1,
+          offset: 0,
+        },
+        {
+          transform: `translate(${fly.x0 + dx * 0.5}px, ${
+            fly.y0 + dy * 0.5 - 40
+          }px) translate(-50%, -50%) scale(0.92)`,
+          opacity: 1,
+          offset: 0.55,
+        },
+        {
+          transform: `translate(${fly.x1}px, ${fly.y1}px) translate(-50%, -50%) scale(0.2)`,
+          opacity: 0,
+          offset: 1,
+        },
+      ],
+      { duration: 850, easing: "cubic-bezier(0.42, 0, 0.22, 1)", fill: "forwards" }
+    );
+    anim.onfinish = () => {
+      setFly(null);
+      triggerGlow();
+    };
+    return () => anim.cancel();
+  }, [fly, triggerGlow]);
 
   // Enable iOS `:active` press feedback on tap.
   React.useEffect(() => {
@@ -230,13 +301,17 @@ function ChatScreen() {
         },
       ]);
       setTyping(false);
-      triggerGlow();
+      // Let the chip paint + settle, then fly it into the Collections icon.
+      window.setTimeout(launchFlyToCollections, 260);
     }, 2800);
   }
 
   return (
     <div className="bg-white sm:flex sm:min-h-screen sm:items-center sm:justify-center sm:bg-neutral-200 sm:p-6">
-      <div className="relative flex h-[100dvh] w-full flex-col overflow-hidden bg-white motion-safe:animate-screen-in sm:h-[852px] sm:w-[393px] sm:rounded-[44px] sm:shadow-2xl">
+      <div
+        ref={frameRef}
+        className="relative flex h-[100dvh] w-full flex-col overflow-hidden bg-white motion-safe:animate-screen-in sm:h-[852px] sm:w-[393px] sm:rounded-[44px] sm:shadow-2xl"
+      >
         {/* Tab header — fixed (gradient on Chat, flat surface on Activity) */}
         <div
           className={`shrink-0 pt-[env(safe-area-inset-top)] ${
@@ -267,7 +342,10 @@ function ChatScreen() {
               />
             }
             right={
-              <span className="relative inline-flex items-center justify-center">
+              <span
+                ref={collectionsRef}
+                className="relative inline-flex items-center justify-center"
+              >
                 {/* Pulsing light-red rings — fade in/out over 600ms */}
                 <span
                   aria-hidden
@@ -361,6 +439,20 @@ function ChatScreen() {
           />
         </div>
           </>
+        )}
+
+        {/* Flying XLS replica — "stores" the artifact into the Collections icon */}
+        {fly && (
+          <div
+            ref={flyElRef}
+            aria-hidden
+            className="pointer-events-none absolute left-0 top-0 z-50 flex items-center justify-center rounded-[6px] bg-white p-1 shadow-[0px_10px_24px_rgba(0,0,0,0.18)] [&_svg]:size-4 [&_svg]:shrink-0"
+            style={{
+              transform: `translate(${fly.x0}px, ${fly.y0}px) translate(-50%, -50%)`,
+            }}
+          >
+            <FileXls weight="regular" className="text-success" />
+          </div>
         )}
 
         {/* Report preview sheet — opened from the inline report chip */}

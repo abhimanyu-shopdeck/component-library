@@ -25,7 +25,10 @@ function ReportChip({ name = "report.xls", onClick, className }: ReportChipProps
         className
       )}
     >
-      <span className="flex items-center justify-center rounded-[4px] bg-white p-1 shadow-[0px_1px_2px_rgba(0,0,0,0.08)] [&_svg]:size-4 [&_svg]:shrink-0">
+      <span
+        data-report-fly-source
+        className="flex items-center justify-center rounded-[4px] bg-white p-1 shadow-[0px_1px_2px_rgba(0,0,0,0.08)] [&_svg]:size-4 [&_svg]:shrink-0"
+      >
         <FileXls weight="regular" className="text-success" />
       </span>
       <span className="type-body-1 text-text-primary">{name}</span>
