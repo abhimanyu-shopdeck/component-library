@@ -36,6 +36,7 @@ import { SelectorPill } from "@/components/ui/selector-pill";
 import { Pill } from "@/components/ui/pill";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup } from "@/components/ui/radio-group";
+import { DataCard } from "@/components/ui/data-card";
 import { SectionTitle } from "@/components/ui/section-title";
 import { TextField, SelectField } from "@/components/ui/text-field";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
@@ -106,6 +107,55 @@ const ICONS: { Icon: Icon; name: string }[] = [
   { Icon: Sparkle, name: "Sparkle" },
   { Icon: Trash, name: "Trash" },
 ];
+
+function DataCardDemo() {
+  return (
+    <div className="flex w-full max-w-[360px] flex-col gap-3">
+      <div className="grid grid-cols-2 gap-3">
+        <DataCard
+          type="single"
+          metrics={[
+            { label: "Orders placed", value: "500", cap: "/ ₹5.0 L", progress: { pct: 53 } },
+          ]}
+        />
+        <DataCard
+          type="single"
+          metrics={[
+            { label: "Orders placed", value: "500", delta: { value: "15%" } },
+          ]}
+        />
+      </div>
+      <DataCard
+        type="double"
+        metrics={[
+          { label: "Normal spends", value: "₹2.4L", cap: "/ ₹5.0 L", progress: { pct: 48 } },
+          { label: "CPP/ROAS spends", value: "₹6.4L", cap: "/ ₹5.0 L", progress: { pct: 100, tone: "red" } },
+        ]}
+      />
+      <DataCard
+        type="double"
+        metrics={[
+          { label: "Normal spends", value: "₹2.4L", delta: { value: "15%" } },
+          { label: "CPP/ROAS spends", value: "₹6.4L", delta: { value: "15%" } },
+        ]}
+      />
+      <DataCard
+        type="triple"
+        metrics={[
+          { label: "Label", value: "₹2.4L" },
+          { label: "Label", value: "₹2.4L" },
+          { label: "Label", value: "₹2.4L" },
+        ]}
+      />
+      <DataCard
+        type="ratings"
+        rating={3.2}
+        ratingLabel="Customer ratings"
+        ratingNote="Last 15 days"
+      />
+    </div>
+  );
+}
 
 function CheckboxDemo() {
   const [items, setItems] = React.useState({ gst: true, terms: false });
@@ -829,6 +879,32 @@ const [active, setActive] = useState("Action Needed");
     {f}
   </SelectorPill>
 ))}`,
+  },
+  {
+    slug: "data-card",
+    name: "Data Card",
+    description:
+      "Data-representation metric surface (Figma 4909:5126) with four layouts — single, double (split), triple (split), and ratings — plus an optional green/red delta pill and an orange progress bar.",
+    preview: <DataCardDemo />,
+    code: `import { DataCard } from "@/components/ui/data-card";
+
+<DataCard type="single" metrics={[
+  { label: "Orders placed", value: "500", cap: "/ ₹5.0 L", progress: { pct: 53 } },
+]} />
+<DataCard type="single" metrics={[
+  { label: "Orders placed", value: "500", delta: { value: "15%" } },
+]} />
+
+<DataCard type="double" metrics={[
+  { label: "Normal spends", value: "₹2.4L", cap: "/ ₹5.0 L", progress: { pct: 48 } },
+  { label: "CPP/ROAS spends", value: "₹6.4L", progress: { pct: 100, tone: "red" } },
+]} />
+
+<DataCard type="triple" metrics={[
+  { label: "Label", value: "₹2.4L" }, …×3
+]} />
+
+<DataCard type="ratings" rating={3.2} ratingNote="Last 15 days" />`,
   },
   {
     slug: "checkbox",
