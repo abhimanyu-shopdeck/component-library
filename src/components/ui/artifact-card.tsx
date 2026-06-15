@@ -2,7 +2,9 @@
 
 import * as React from "react";
 import {
+  DotsThreeCircle,
   HandbagSimple,
+  Lightning,
   Lock,
   MagnifyingGlass,
   SealCheck,
@@ -11,7 +13,6 @@ import {
 } from "@phosphor-icons/react";
 
 import { cn } from "@/lib/utils";
-import { ProgressBar } from "@/components/ui/progress-bar";
 
 export type ArtifactType =
   | "report"
@@ -20,7 +21,7 @@ export type ArtifactType =
   | "brand-kit"
   | "document";
 
-export type ArtifactStatus = "in-progress" | "completed";
+export type ArtifactStatus = "ongoing" | "action-needed" | "completed";
 
 /* ── Type-specific CSS preview mocks (AI-native, no images) ───────────── */
 
@@ -116,6 +117,24 @@ function TablePreview({ size = "sm" }: { size?: "sm" | "lg" }) {
   );
 }
 
+/** Plain text-document preview — title + paragraph lines (no imagery). */
+function TextPreview({ size = "sm" }: { size?: "sm" | "lg" }) {
+  const lg = size === "lg";
+  const lines = ["w-3/4", "w-full", "w-full", "w-5/6", "w-full", "w-2/3", "w-full", "w-1/2"];
+  return (
+    <div className={cn("flex h-full flex-col bg-white", lg ? "gap-2.5 p-4" : "gap-1.5 p-3")}>
+      <span className={cn("rounded-full bg-text-primary/80", lg ? "h-3 w-3/5" : "h-2 w-3/5")} />
+      <span className="h-1" />
+      {lines.map((w, i) => (
+        <span
+          key={i}
+          className={cn("rounded-full bg-surface-app", w, lg ? "h-2.5" : "h-1.5")}
+        />
+      ))}
+    </div>
+  );
+}
+
 function ArtifactThumb({
   type,
   size = "sm",
@@ -123,8 +142,8 @@ function ArtifactThumb({
   type: ArtifactType;
   size?: "sm" | "lg";
 }) {
-  if (type === "report" || type === "document")
-    return <TablePreview size={size} />;
+  if (type === "document") return <TextPreview size={size} />;
+  if (type === "report") return <TablePreview size={size} />;
   return <StorePreview size={size} />;
 }
 
@@ -216,14 +235,29 @@ function StorePageFull() {
   );
 }
 
+/** Solid status pills overlaid on active cards (Figma `4803:3626`). */
+const STATUS_PILL: Record<
+  Exclude<ArtifactStatus, "completed">,
+  { label: string; icon: React.ReactNode; bg: string }
+> = {
+  ongoing: {
+    label: "Ongoing",
+    icon: <DotsThreeCircle weight="regular" />,
+    bg: "bg-brand-primary",
+  },
+  "action-needed": {
+    label: "Need action",
+    icon: <Lightning weight="fill" />,
+    bg: "bg-warning-default",
+  },
+};
+
 type ArtifactCardProps = {
   type: ArtifactType;
   name: string;
   /** Relative time, e.g. "10 min ago". */
   time: string;
   status: ArtifactStatus;
-  /** 0–100, shown on the in-progress bar. */
-  progress?: number;
   onClick?: () => void;
   className?: string;
 };
@@ -231,20 +265,19 @@ type ArtifactCardProps = {
 /**
  * Artifact card for the Collections panel. Every card has the same structure
  * (preview thumbnail + name + time), so the layout never shifts. `completed`
- * cards are clean and passive; only `in-progress` cards surface a live status
- * pill + a progress bar — both *overlaid on the thumbnail*, so height is
- * identical across states. Tapping opens the preview sheet.
+ * cards are clean and passive; `ongoing` (blue) and `action-needed` (orange)
+ * cards surface a solid status pill *overlaid on the thumbnail* — so the card
+ * height is identical across states. Tapping opens the preview sheet.
  */
 function ArtifactCard({
   type,
   name,
   time,
   status,
-  progress = 55,
   onClick,
   className,
 }: ArtifactCardProps) {
-  const inProgress = status === "in-progress";
+  const pill = status === "completed" ? null : STATUS_PILL[status];
   return (
     <button
       type="button"
@@ -259,21 +292,18 @@ function ArtifactCard({
           <ArtifactThumb type={type} />
         </div>
 
-        {/* Active state only — overlaid so completed cards stay clean and the
-            card height never changes. */}
-        {inProgress && (
-          <>
-            <span className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-full bg-white/90 px-2 py-0.5 type-caption text-warning-default shadow-[0px_2px_6px_rgba(0,0,0,0.08)] backdrop-blur">
-              <span className="relative flex size-1.5">
-                <span className="absolute inline-flex size-full animate-ping rounded-full bg-warning-default/70" />
-                <span className="relative inline-flex size-1.5 rounded-full bg-warning-default" />
-              </span>
-              In progress
-            </span>
-            <span className="absolute inset-x-0 bottom-0">
-              <ProgressBar value={progress} tone="orange" className="h-1 rounded-none" />
-            </span>
-          </>
+        {/* Status pill — overlaid so completed cards stay clean and the card
+            height never changes across states. */}
+        {pill && (
+          <span
+            className={cn(
+              "absolute left-2 top-2 inline-flex items-center gap-1 rounded-md px-1.5 py-[3px] type-caption text-white [&_svg]:size-3 [&_svg]:shrink-0",
+              pill.bg
+            )}
+          >
+            {pill.icon}
+            {pill.label}
+          </span>
         )}
       </div>
 

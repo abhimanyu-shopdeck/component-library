@@ -553,29 +553,27 @@ function ArtifactCardDemo() {
     <div className="grid w-full max-w-[360px] grid-cols-2 gap-3">
       <ArtifactCard
         type="website"
-        name="Brand Kit generation"
+        name="Brand Kit for festive"
         time="10 min ago"
-        status="in-progress"
-        progress={60}
-      />
-      <ArtifactCard
-        type="report"
-        name="RTO report for last week"
-        time="10 min ago"
-        status="completed"
-      />
-      <ArtifactCard
-        type="report"
-        name="RTO report for last month"
-        time="1 hr ago"
-        status="completed"
+        status="ongoing"
       />
       <ArtifactCard
         type="website"
         name="Website creation"
         time="10 min ago"
-        status="in-progress"
-        progress={45}
+        status="action-needed"
+      />
+      <ArtifactCard
+        type="report"
+        name="RTO report for last week"
+        time="1 hr ago"
+        status="completed"
+      />
+      <ArtifactCard
+        type="document"
+        name="Return policy doc"
+        time="yesterday"
+        status="completed"
       />
     </div>
   );
@@ -1027,7 +1025,7 @@ const [active, setActive] = useState("Action Needed");
     slug: "artifact-card",
     name: "Artifact Card",
     description:
-      "A uniform artifact card for the Artifacts panel — status pill (in-progress orange + dot / completed green + check), type-specific preview thumbnail (shimmer while generating), name, last-updated time, and an orange progress bar while in-progress. Tapping opens the artifact preview sheet (Share / Download / Continue).",
+      "A uniform card for the Collections panel. Same structure across states (type preview thumbnail + name + time), so the layout never shifts. completed = clean/passive; ongoing (blue) and action-needed (orange) overlay a solid status pill on the thumbnail. Types: report (table) / document (text) / website-catalog-brand-kit (storefront). Tapping opens the preview sheet.",
     preview: <ArtifactCardDemo />,
     code: `import { ArtifactCard } from "@/components/ui/artifact-card";
 
@@ -1035,8 +1033,7 @@ const [active, setActive] = useState("Action Needed");
   type="website"            // report | website | catalog | brand-kit | document
   name="Website creation"
   time="10 min ago"
-  status="in-progress"      // in-progress | completed
-  progress={45}             // orange bar (in-progress only)
+  status="action-needed"    // ongoing | action-needed | completed
   onClick={() => openPreviewSheet()}
 />`,
   },

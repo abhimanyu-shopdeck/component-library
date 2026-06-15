@@ -22,13 +22,12 @@ type Artifact = {
   name: string;
   time: string;
   status: ArtifactStatus;
-  progress?: number;
 };
 
 const ARTIFACTS: Artifact[] = [
-  { id: "site", type: "website", name: "Website creation", time: "10 min ago", status: "in-progress", progress: 45 },
+  { id: "site", type: "website", name: "Website creation", time: "10 min ago", status: "action-needed" },
   { id: "rto1", type: "report", name: "RTO report for last week", time: "10 min ago", status: "completed" },
-  { id: "brand", type: "website", name: "Brand Kit for festive", time: "30 min ago", status: "in-progress", progress: 72 },
+  { id: "brand", type: "website", name: "Brand Kit for festive", time: "30 min ago", status: "ongoing" },
   { id: "rto2", type: "report", name: "RTO report for last month", time: "1 hr ago", status: "completed" },
   { id: "catalog", type: "catalog", name: "Festive catalog", time: "2 hr ago", status: "completed" },
   { id: "policy", type: "document", name: "Return policy doc", time: "yesterday", status: "completed" },
