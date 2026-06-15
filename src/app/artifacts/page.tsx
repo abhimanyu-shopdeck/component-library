@@ -16,17 +16,37 @@ import {
   type ArtifactType,
 } from "@/components/ui/artifact-card";
 
+type DocSection = { heading: string; body: string };
+
 type Artifact = {
   id: string;
   type: ArtifactType;
   name: string;
   time: string;
   status: ArtifactStatus;
+  /** Flat text shown in the card thumbnail (document type). */
   content?: string;
+  /** Structured sections shown in the preview sheet (document type). */
+  doc?: DocSection[];
 };
 
+const RETURN_POLICY_DOC: DocSection[] = [
+  {
+    heading: "Returns & eligibility",
+    body: "Items can be returned within 7 days of delivery, provided they are unused and in their original packaging with all tags intact.",
+  },
+  {
+    heading: "Refunds",
+    body: "Refunds are issued to the original payment method within 5–7 business days of pickup. Shipping and COD charges are non-refundable.",
+  },
+  {
+    heading: "Exclusions",
+    body: "Customised, intimate and final-sale items are not eligible for return or exchange. Damaged-on-arrival items must be reported within 24 hours of delivery.",
+  },
+];
+
 const RETURN_POLICY =
-  "Items can be returned within 7 days of delivery, provided they are unused and in their original packaging with tags intact. Refunds are issued to the original payment method within 5–7 business days of pickup. Customised, intimate and final-sale items are not eligible for return or exchange.";
+  "Items can be returned within 7 days of delivery, provided they are unused and in their original packaging with all tags intact.";
 
 const ARTIFACTS: Artifact[] = [
   { id: "site", type: "website", name: "Website creation", time: "10 min ago", status: "action-needed" },
@@ -34,7 +54,7 @@ const ARTIFACTS: Artifact[] = [
   { id: "brand", type: "website", name: "Brand Kit for festive", time: "30 min ago", status: "ongoing" },
   { id: "rto2", type: "report", name: "RTO report for last month", time: "1 hr ago", status: "completed" },
   { id: "catalog", type: "catalog", name: "Festive catalog", time: "2 hr ago", status: "completed" },
-  { id: "policy", type: "document", name: "Return policy doc", time: "yesterday", status: "completed", content: RETURN_POLICY },
+  { id: "policy", type: "document", name: "Return policy doc", time: "yesterday", status: "completed", content: RETURN_POLICY, doc: RETURN_POLICY_DOC },
 ];
 
 export default function ArtifactsScreen() {
@@ -104,11 +124,14 @@ export default function ArtifactsScreen() {
                 <StorePageFull />
               </div>
             ) : preview.type === "document" ? (
-              /* document → text only */
-              <div className="rounded-2xl border border-surface-muted bg-white p-4">
-                <p className="type-body-1 whitespace-pre-line text-text-primary">
-                  {preview.content}
-                </p>
+              /* document → formatted policy doc: H2 heading + Body-1 copy */
+              <div className="flex flex-col gap-5 rounded-2xl border border-surface-muted bg-white p-5">
+                {preview.doc?.map((section, i) => (
+                  <div key={i} className="flex flex-col gap-1.5">
+                    <h3 className="type-h2 text-text-primary">{section.heading}</h3>
+                    <p className="type-body-1 text-text-secondary">{section.body}</p>
+                  </div>
+                ))}
               </div>
             ) : (
               <div className="overflow-hidden rounded-2xl border border-surface-muted bg-white">
