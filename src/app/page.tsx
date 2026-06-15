@@ -37,6 +37,7 @@ import { Pill } from "@/components/ui/pill";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup } from "@/components/ui/radio-group";
 import { DataCard } from "@/components/ui/data-card";
+import { ProgressBar } from "@/components/ui/progress-bar";
 import { SectionTitle } from "@/components/ui/section-title";
 import { TextField, SelectField } from "@/components/ui/text-field";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
@@ -107,6 +108,17 @@ const ICONS: { Icon: Icon; name: string }[] = [
   { Icon: Sparkle, name: "Sparkle" },
   { Icon: Trash, name: "Trash" },
 ];
+
+function ProgressBarDemo() {
+  return (
+    <div className="flex w-full max-w-[280px] flex-col gap-4">
+      <ProgressBar tone="green" value={53} />
+      <ProgressBar tone="orange" value={53} />
+      <ProgressBar tone="red" value={86} />
+      <ProgressBar tone="blue" value={53} />
+    </div>
+  );
+}
 
 function DataCardDemo() {
   return (
@@ -879,6 +891,19 @@ const [active, setActive] = useState("Action Needed");
     {f}
   </SelectorPill>
 ))}`,
+  },
+  {
+    slug: "progress-bar",
+    name: "Progress Bar",
+    description:
+      "Slim progress bar (Figma 4909:4892) — a grey track with a light→solid gradient fill in four tones: orange, blue, red, green.",
+    preview: <ProgressBarDemo />,
+    code: `import { ProgressBar } from "@/components/ui/progress-bar";
+
+<ProgressBar tone="green" value={53} />
+<ProgressBar tone="orange" value={53} />
+<ProgressBar tone="red" value={86} />
+<ProgressBar tone="blue" value={53} />`,
   },
   {
     slug: "data-card",

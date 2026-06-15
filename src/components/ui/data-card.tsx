@@ -2,11 +2,11 @@ import * as React from "react";
 import { ArrowUpRight, ChatTeardropText, Star } from "@phosphor-icons/react";
 
 import { cn } from "@/lib/utils";
+import { ProgressBar, type ProgressTone } from "@/components/ui/progress-bar";
 
 /* ── Pieces ──────────────────────────────────────────────────────────── */
 
 type DeltaTone = "up" | "down";
-type ProgressTone = "orange" | "red" | "brand";
 
 function DeltaPill({ value, tone = "up" }: { value: string; tone?: DeltaTone }) {
   const up = tone === "up";
@@ -19,24 +19,6 @@ function DeltaPill({ value, tone = "up" }: { value: string; tone?: DeltaTone }) 
     >
       <ArrowUpRight className="size-3" weight="bold" />
       {value}
-    </span>
-  );
-}
-
-function Progress({ pct, tone = "orange" }: { pct: number; tone?: ProgressTone }) {
-  return (
-    <span className="block h-1.5 w-full overflow-hidden rounded-full bg-border-divider">
-      <span
-        className={cn(
-          "block h-full rounded-full",
-          tone === "red"
-            ? "bg-danger"
-            : tone === "brand"
-              ? "bg-brand-primary"
-              : "bg-[linear-gradient(to_right,#fef3c6_0%,#e08a2d_100%)]"
-        )}
-        style={{ width: `${pct}%` }}
-      />
     </span>
   );
 }
@@ -87,7 +69,7 @@ function MetricBlock({
         )}
         {delta && <DeltaPill value={delta.value} tone={delta.tone} />}
       </div>
-      {progress && <Progress pct={progress.pct} tone={progress.tone} />}
+      {progress && <ProgressBar value={progress.pct} tone={progress.tone} />}
     </div>
   );
 }
