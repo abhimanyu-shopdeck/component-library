@@ -96,6 +96,8 @@
   /* Artifacts: shimmer sweep (generating) + indeterminate progress */
   --animate-shimmer: shimmer 1.6s ease-in-out infinite;
   --animate-progress-indeterminate: progress-indeterminate 1.4s ease-in-out infinite;
+  /* New-artifact attention: soft red breathing glow (Collections icon) */
+  --animate-artifact-glow: artifact-glow 2.6s ease-in-out infinite;
 }
 
 @keyframes shimmer {
@@ -127,6 +129,22 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+/* Soft, premium red breathing glow used on the Collections icon when a new
+   artifact is generated. Gentle in/out — no aggressive notification pulse. */
+@keyframes artifact-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1px rgba(244, 67, 54, 0.28),
+      0 0 10px 2px rgba(244, 67, 54, 0.18);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1.5px rgba(244, 67, 54, 0.5),
+      0 0 20px 6px rgba(244, 67, 54, 0.42);
   }
 }
 

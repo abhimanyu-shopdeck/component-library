@@ -15,6 +15,10 @@ import {
   type ArtifactStatus,
   type ArtifactType,
 } from "@/components/ui/artifact-card";
+import {
+  getGeneratedArtifacts,
+  onArtifactsChanged,
+} from "@/lib/artifacts-store";
 
 type DocSection = { heading: string; body: string };
 
@@ -62,6 +66,18 @@ export default function ArtifactsScreen() {
   const [preview, setPreview] = React.useState<Artifact | null>(null);
   const toChat = React.useCallback(() => router.push("/chat"), [router]);
 
+  // Generated artifacts (e.g. a report created from chat) appear first.
+  const [generated, setGenerated] = React.useState<Artifact[]>([]);
+  React.useEffect(() => {
+    const load = () => setGenerated(getGeneratedArtifacts() as Artifact[]);
+    load();
+    return onArtifactsChanged(load);
+  }, []);
+  const artifacts = React.useMemo(
+    () => [...generated, ...ARTIFACTS],
+    [generated]
+  );
+
   return (
     <div className="bg-surface-app sm:flex sm:min-h-screen sm:items-center sm:justify-center sm:bg-neutral-200 sm:p-6">
       <div className="relative flex h-[100dvh] w-full flex-col overflow-hidden bg-surface-app motion-safe:animate-screen-in sm:h-[852px] sm:w-[393px] sm:rounded-[44px] sm:shadow-2xl">
@@ -85,7 +101,7 @@ export default function ArtifactsScreen() {
         <main className="flex-1 overflow-y-auto px-4 pb-6 pt-3">
           {/* Grid of uniform cards — completed are passive, active ones stand out */}
           <div className="grid grid-cols-2 gap-3">
-            {ARTIFACTS.map((a) => (
+            {artifacts.map((a) => (
               <ArtifactCard key={a.id} {...a} onClick={() => setPreview(a)} />
             ))}
           </div>

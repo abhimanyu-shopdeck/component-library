@@ -232,6 +232,19 @@ export const COMPONENTS: ComponentIntel[] = [
     emotionalTone: ["conversational"],
   },
   {
+    slug: "report-chip",
+    name: "ReportChip",
+    purpose: "Inline report/file attachment delivered inside an AI chat bubble.",
+    useWhen: [
+      "AI finished generating a report from chat",
+      "Linking a chat message to its Collections artifact",
+    ],
+    avoidWhen: ["Generic links (use a ghost Button)", "Status badges (use Pill)"],
+    priority: "medium",
+    emotionalTone: ["accomplished", "tangible"],
+    pairsWith: ["ChatBubble", "BottomSheet", "ArtifactCard"],
+  },
+  {
     slug: "user-thumbnail",
     name: "UserThumbnail",
     purpose: "Represent a person or brand as an avatar.",

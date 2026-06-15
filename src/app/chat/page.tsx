@@ -2,17 +2,38 @@
 
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { CaretLeft, SquaresFour } from "@phosphor-icons/react";
+import {
+  CaretLeft,
+  DownloadSimple,
+  ShareNetwork,
+  SquaresFour,
+} from "@phosphor-icons/react";
 
+import { cn } from "@/lib/utils";
 import { Header } from "@/components/ui/header";
 import { RoundButton } from "@/components/ui/round-button";
 import { Switch } from "@/components/ui/switch";
 import { ChatBar } from "@/components/ui/chat-bar";
 import { ChatBubble } from "@/components/ui/chat-bubble";
+import { ReportChip } from "@/components/ui/report-chip";
+import { BottomSheet } from "@/components/ui/bottom-sheet";
+import { ArtifactThumb } from "@/components/ui/artifact-card";
+import { Button } from "@/components/ui/button";
 import { AiBadge } from "@/components/icons";
+import { addGeneratedArtifact } from "@/lib/artifacts-store";
 import { ActivityFeed } from "./activity-feed";
 
-type Message = { id: number; from: "seller" | "ai"; text: string; time: string };
+type Message = {
+  id: number;
+  from: "seller" | "ai";
+  time: string;
+  /** "text" (default) or an inline report attachment. */
+  kind?: "text" | "report";
+  text?: string;
+  /** report kind — filename + the Collections artifact name. */
+  reportName?: string;
+  artifactName?: string;
+};
 
 const INITIAL: Message[] = [
   {
@@ -81,6 +102,24 @@ function getAiReply(text: string): string {
   return AI_RULES.find((rule) => rule.test.test(text))?.reply ?? AI_FALLBACK;
 }
 
+/* ── Report-generation intent ──────────────────────────────────────────
+ * Matches "Generate report for last 3 months", "Create quarterly sales
+ * report", "Prepare analytics summary", etc. When matched, the AI kicks off
+ * a report artifact instead of a plain text reply.
+ * ---------------------------------------------------------------------- */
+function isReportRequest(text: string): boolean {
+  return /\b(report|analytics|summary|dashboard)\b/i.test(text);
+}
+
+/** Derive a human title for the generated report from the request. */
+function deriveReportName(text: string): string {
+  if (/\bquarterly\b/i.test(text)) return "Quarterly sales report";
+  if (/\banalytics\b|\bsummary\b/i.test(text)) return "Analytics summary";
+  if (/\b3\s*months?\b|\bthree months?\b|\bquarter\b/i.test(text))
+    return "Sales report · last 3 months";
+  return "Sales report";
+}
+
 function ChatScreen() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -90,9 +129,25 @@ function ChatScreen() {
   const [messages, setMessages] = React.useState<Message[]>(INITIAL);
   const [draft, setDraft] = React.useState("");
   const [typing, setTyping] = React.useState(false);
+  const [glow, setGlow] = React.useState(false);
+  const [reportPreview, setReportPreview] = React.useState<string | null>(null);
   const endRef = React.useRef<HTMLDivElement>(null);
   const idRef = React.useRef(INITIAL.length);
   const nextId = () => (idRef.current += 1);
+  const glowTimer = React.useRef<number | null>(null);
+
+  // Soft attention glow on the Collections icon for 15s after a new artifact.
+  const triggerGlow = React.useCallback(() => {
+    setGlow(true);
+    if (glowTimer.current) window.clearTimeout(glowTimer.current);
+    glowTimer.current = window.setTimeout(() => setGlow(false), 15000);
+  }, []);
+  React.useEffect(
+    () => () => {
+      if (glowTimer.current) window.clearTimeout(glowTimer.current);
+    },
+    []
+  );
 
   // Enable iOS `:active` press feedback on tap.
   React.useEffect(() => {
@@ -117,15 +172,66 @@ function ChatScreen() {
     ]);
     setDraft("");
 
-    // 2. AI "thinks", then auto-replies via the rule framework.
+    // 2. Report request → kick off report generation; else plain reply.
     setTyping(true);
+    if (isReportRequest(text)) {
+      generateReport(text);
+    } else {
+      window.setTimeout(() => {
+        setMessages((m) => [
+          ...m,
+          { id: nextId(), from: "ai", text: getAiReply(text), time: "Now" },
+        ]);
+        setTyping(false);
+      }, 900);
+    }
+  }
+
+  /**
+   * Report flow: AI acknowledges → "generates" → posts an inline report.xls
+   * attachment, registers the artifact in Collections, and glows the icon.
+   */
+  function generateReport(text: string) {
+    const artifactName = deriveReportName(text);
+
+    // a. Acknowledge.
     window.setTimeout(() => {
       setMessages((m) => [
         ...m,
-        { id: nextId(), from: "ai", text: getAiReply(text), time: "Now" },
+        {
+          id: nextId(),
+          from: "ai",
+          text: "On it — pulling your data and generating the report now.",
+          time: "Now",
+        },
+      ]);
+      setTyping(true);
+    }, 800);
+
+    // b. Deliver the report attachment + register the artifact + glow.
+    window.setTimeout(() => {
+      addGeneratedArtifact({
+        id: `rep-${Date.now()}`,
+        type: "report",
+        name: artifactName,
+        time: "Just now",
+        createdAt: Date.now(),
+        status: "completed",
+      });
+      setMessages((m) => [
+        ...m,
+        {
+          id: nextId(),
+          from: "ai",
+          kind: "report",
+          reportName: "report.xls",
+          artifactName,
+          time: "Now",
+        },
       ]);
       setTyping(false);
-    }, 900);
+      triggerGlow();
+    }, 2800);
   }
 
   return (
@@ -161,13 +267,27 @@ function ChatScreen() {
               />
             }
             right={
-              <RoundButton
-                size="icon-md"
-                aria-label="Collections"
-                onClick={() => router.push("/artifacts")}
-              >
-                <SquaresFour />
-              </RoundButton>
+              <span className="relative inline-flex">
+                {/* Soft red breathing halo — fades in/out over 700ms */}
+                <span
+                  aria-hidden
+                  className={cn(
+                    "pointer-events-none absolute inset-0 rounded-[18px] transition-opacity duration-700",
+                    glow ? "animate-artifact-glow opacity-100" : "opacity-0"
+                  )}
+                />
+                <RoundButton
+                  size="icon-md"
+                  aria-label="Collections"
+                  onClick={() => router.push("/artifacts")}
+                  className={cn(
+                    "relative [&_svg]:transition-colors [&_svg]:duration-700",
+                    glow && "[&_svg]:text-danger"
+                  )}
+                >
+                  <SquaresFour weight={glow ? "fill" : "regular"} />
+                </RoundButton>
+              </span>
             }
           />
         </div>
@@ -180,21 +300,28 @@ function ChatScreen() {
         <main className="flex flex-1 flex-col gap-3 overflow-y-auto px-4 py-4">
           {messages.map((m, i) => {
             const firstOfRun = m.from === "ai" && messages[i - 1]?.from !== "ai";
+            const aiHeader =
+              firstOfRun || m.kind === "report" ? (
+                <>
+                  <AiBadge className="size-5" />
+                  Shopdeck
+                </>
+              ) : undefined;
             return m.from === "ai" ? (
               <ChatBubble
                 key={m.id}
                 variant="ai"
                 time={m.time}
-                header={
-                  firstOfRun ? (
-                    <>
-                      <AiBadge className="size-5" />
-                      Shopdeck
-                    </>
-                  ) : undefined
-                }
+                header={aiHeader}
               >
-                {m.text}
+                {m.kind === "report" ? (
+                  <ReportChip
+                    name={m.reportName}
+                    onClick={() => setReportPreview(m.artifactName ?? "Report")}
+                  />
+                ) : (
+                  m.text
+                )}
               </ChatBubble>
             ) : (
               <ChatBubble key={m.id} variant="user" time={m.time} read>
@@ -231,6 +358,41 @@ function ChatScreen() {
         </div>
           </>
         )}
+
+        {/* Report preview sheet — opened from the inline report chip */}
+        <BottomSheet
+          open={reportPreview !== null}
+          onOpenChange={(o) => !o && setReportPreview(null)}
+          title={reportPreview ?? "Report"}
+          description="Generated report — saved to Collections."
+          footer={
+            <>
+              <Button variant="secondary" size="icon-lg" aria-label="Share">
+                <ShareNetwork />
+              </Button>
+              <Button variant="secondary" size="icon-lg" aria-label="Download">
+                <DownloadSimple />
+              </Button>
+              <Button
+                variant="primary"
+                size="lg"
+                className="flex-1"
+                onClick={() => {
+                  setReportPreview(null);
+                  router.push("/artifacts");
+                }}
+              >
+                Open in Collections
+              </Button>
+            </>
+          }
+        >
+          <div className="overflow-hidden rounded-2xl border border-surface-muted bg-white">
+            <div className="aspect-[4/5] w-full">
+              <ArtifactThumb type="report" size="lg" />
+            </div>
+          </div>
+        </BottomSheet>
       </div>
     </div>
   );

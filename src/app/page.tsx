@@ -42,6 +42,7 @@ import { SectionTitle } from "@/components/ui/section-title";
 import { TextField, SelectField } from "@/components/ui/text-field";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { ArtifactCard } from "@/components/ui/artifact-card";
+import { ReportChip } from "@/components/ui/report-chip";
 import { UserThumbnail } from "@/components/ui/user-thumbnail";
 import { BottomNav } from "@/components/ui/bottom-nav";
 import { ChatBar } from "@/components/ui/chat-bar";
@@ -579,6 +580,17 @@ function ArtifactCardDemo() {
   );
 }
 
+function ReportChipDemo() {
+  return (
+    <div className="flex w-full max-w-[300px] flex-col items-start gap-2 rounded-2xl rounded-tl-[2px] bg-[linear-gradient(103deg,#e8ebf9_0%,#f8f9ff_100%)] p-3">
+      <ReportChip name="report.xls" onClick={() => {}} />
+      <span className="self-end text-[10px] leading-[14px] text-text-secondary">
+        8:00AM
+      </span>
+    </div>
+  );
+}
+
 function BottomSheetDemo() {
   const [mode, setMode] = React.useState<null | "back" | "plain">(null);
   const close = () => setMode(null);
@@ -1036,6 +1048,19 @@ const [active, setActive] = useState("Action Needed");
   status="action-needed"    // ongoing | action-needed | completed
   onClick={() => openPreviewSheet()}
 />`,
+  },
+  {
+    slug: "report-chip",
+    name: "Report Chip",
+    description:
+      "Inline report attachment shown inside an AI chat bubble (Figma 4929:11765) — a white XLS-icon box + filename. Posted when the AI finishes generating a report; tapping it opens the report preview sheet. The matching artifact is registered in Collections and the header Collections icon glows for 15s.",
+    preview: <ReportChipDemo />,
+    code: `import { ReportChip } from "@/components/ui/report-chip";
+
+// Inside an AI ChatBubble (variant="ai")
+<ChatBubble variant="ai" time="Now" header={<>…Shopdeck</>}>
+  <ReportChip name="report.xls" onClick={() => openReportSheet()} />
+</ChatBubble>`,
   },
   {
     slug: "bottom-sheet",
