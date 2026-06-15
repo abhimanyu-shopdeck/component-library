@@ -364,7 +364,7 @@ function ChatScreen() {
                   )}
                 >
                   {/* single expanding pulse ring */}
-                  <span className="absolute inset-0 rounded-full bg-danger/45 animate-artifact-pulse" />
+                  <span className="absolute inset-0 rounded-full bg-success/45 animate-artifact-pulse" />
                 </span>
                 <RoundButton
                   size="icon-md"
@@ -373,7 +373,7 @@ function ChatScreen() {
                   className={cn(
                     "relative transition-[background-color,border-color,color,box-shadow] duration-500 [&_svg]:transition-colors [&_svg]:duration-500",
                     glow &&
-                      "border-danger bg-danger text-white shadow-[0_6px_16px_rgba(244,67,54,0.4)] hover:bg-danger hover:shadow-[0_6px_16px_rgba(244,67,54,0.4)] [&_svg]:text-white"
+                      "border-success bg-success text-white shadow-[0_6px_16px_rgba(34,161,42,0.4)] hover:bg-success hover:shadow-[0_6px_16px_rgba(34,161,42,0.4)] [&_svg]:text-white"
                   )}
                 >
                   <SquaresFour weight={glow ? "fill" : "regular"} />
