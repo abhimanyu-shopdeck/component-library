@@ -39,6 +39,9 @@ import { Toggle } from "@/components/ui/toggle";
 import { RadioGroup } from "@/components/ui/radio-group";
 import { DataCard } from "@/components/ui/data-card";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { Stepper } from "@/components/ui/stepper";
+import { InfoNote } from "@/components/ui/info-note";
+import { CallbackBar } from "@/components/ui/callback-bar";
 import { SectionTitle } from "@/components/ui/section-title";
 import { TextField, SelectField } from "@/components/ui/text-field";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
@@ -111,6 +114,42 @@ const ICONS: { Icon: Icon; name: string }[] = [
   { Icon: Sparkle, name: "Sparkle" },
   { Icon: Trash, name: "Trash" },
 ];
+
+function CallbackBarDemo() {
+  return (
+    <div className="w-full max-w-[360px] pt-6">
+      {/* Floats above the nav (rounded top, upward shadow). Shown over a faux nav. */}
+      <CallbackBar
+        src="https://i.pravatar.cc/120?img=12"
+        title="Call Anirudh"
+        description="for any kind of assistance during onboarding"
+      />
+      <div className="h-14 w-full border-t border-white bg-surface-app" />
+    </div>
+  );
+}
+
+function InfoNoteDemo() {
+  return (
+    <div className="w-full max-w-[340px]">
+      <InfoNote>This was discussed in the last conversation</InfoNote>
+    </div>
+  );
+}
+
+function StepperDemo() {
+  return (
+    <div className="w-full max-w-[320px] rounded-2xl border border-white bg-white/50 p-3">
+      <Stepper
+        steps={[
+          { label: "12 Jun", status: "done" },
+          { label: "15 Jun", status: "current" },
+          { label: "30 Jun", status: "goal" },
+        ]}
+      />
+    </div>
+  );
+}
 
 function ProgressBarDemo() {
   return (
@@ -958,6 +997,51 @@ const [active, setActive] = useState("Action Needed");
 <ProgressBar tone="orange" value={53} />
 <ProgressBar tone="red" value={86} />
 <ProgressBar tone="blue" value={53} />`,
+  },
+  {
+    slug: "callback-bar",
+    name: "Callback Bar",
+    description:
+      "A 'Call <POC>' help bar (Figma 5284:1003) — avatar + title + subtitle + green Phone button. Layout rule: ALWAYS full screen width and floats directly above BottomNav with NO gap (rounded top corners only, flat bottom, upward shadow). Render it as the first child of the fixed bottom region, immediately before BottomNav.",
+    preview: <CallbackBarDemo />,
+    code: `import { CallbackBar } from "@/components/ui/callback-bar";
+
+// Fixed bottom region — CallbackBar floats directly above BottomNav (no gap):
+<div className="shrink-0 pb-[env(safe-area-inset-bottom)]">
+  <CallbackBar
+    src={pocAvatar}
+    title="Call Anirudh"
+    description="for any kind of assistance during onboarding"
+    onCall={callPoc}
+  />
+  <BottomNav … />
+</div>`,
+  },
+  {
+    slug: "info-note",
+    name: "Info Note",
+    description:
+      "A calm, muted inline aside — a grey rounded box with a leading Info icon + secondary text. Use under a card/section for a passive contextual note; not for warnings/errors.",
+    preview: <InfoNoteDemo />,
+    code: `import { InfoNote } from "@/components/ui/info-note";
+
+<InfoNote>This was discussed in the last conversation</InfoNote>`,
+  },
+  {
+    slug: "stepper",
+    name: "Stepper",
+    description:
+      "Horizontal progress stepper (Figma 5190:5838) for a short go-live / onboarding journey. Nodes: done (filled) · current (ring) · goal (target) · upcoming (grey). The connector into a node is solid when the previous node is done, dotted ahead. Labels sit under the track.",
+    preview: <StepperDemo />,
+    code: `import { Stepper } from "@/components/ui/stepper";
+
+<Stepper
+  steps={[
+    { label: "12 Jun", status: "done" },
+    { label: "15 Jun", status: "current" },
+    { label: "30 Jun", status: "goal" },
+  ]}
+/>`,
   },
   {
     slug: "data-card",

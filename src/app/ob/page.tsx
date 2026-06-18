@@ -6,10 +6,8 @@ import {
   CaretRight,
   ChatTeardropText,
   Check,
-  Info,
   ListChecks,
   Path,
-  PhoneCall,
   ShieldCheck,
   Smiley,
   Sparkle,
@@ -24,19 +22,11 @@ import { SectionTitle } from "@/components/ui/section-title";
 import { UserThumbnail } from "@/components/ui/user-thumbnail";
 import { BlueCardBackground } from "@/components/ui/blue-card-background";
 import { BottomNav } from "@/components/ui/bottom-nav";
+import { CallbackBar } from "@/components/ui/callback-bar";
+import { InfoNote } from "@/components/ui/info-note";
 
 const AVATAR = "https://i.pravatar.cc/120?img=47";
 const POC_AVATAR = "https://i.pravatar.cc/120?img=12";
-
-/* ── A muted, inline info note (used under cards) ───────────────────── */
-function InfoNote({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex items-start gap-2 rounded-lg bg-surface-muted px-3 py-2">
-      <Info className="mt-0.5 size-4 shrink-0 text-text-secondary" />
-      <span className="type-body-2 text-text-secondary">{children}</span>
-    </div>
-  );
-}
 
 /* ── One row inside an activity / updates card ──────────────────────── */
 function ActivityRow({
@@ -345,30 +335,16 @@ export default function OBScreen() {
             <JourneyTimeline onStep={toChat} />
           </section>
 
-          {/* Need help — callback */}
-          <div className="flex items-center gap-3 rounded-2xl bg-white p-3">
-            <UserThumbnail src={POC_AVATAR} size={44} />
-            <div className="flex min-w-0 flex-1 flex-col">
-              <span className="type-h3 text-text-primary">Need help?</span>
-              <span className="type-body-2 text-text-secondary">
-                Get a callback from{" "}
-                <span className="font-medium text-text-primary">Arunabh</span>{" "}
-                anytime
-              </span>
-            </div>
-            <button
-              type="button"
-              aria-label="Request a callback"
-              onClick={toChat}
-              className="grid size-11 shrink-0 place-items-center rounded-full bg-success text-white shadow-[0px_6px_16px_rgba(34,161,42,0.35)] outline-none transition-transform active:scale-95 [&_svg]:size-5"
-            >
-              <PhoneCall weight="fill" />
-            </button>
-          </div>
         </main>
 
-        {/* Bottom nav */}
+        {/* Fixed bottom region — CallbackBar floats flush above the nav, no gap */}
         <div className="shrink-0 bg-surface-app pb-[env(safe-area-inset-bottom)]">
+          <CallbackBar
+            src={POC_AVATAR}
+            title="Need help?"
+            description="Get a callback from Arunabh anytime"
+            onCall={toChat}
+          />
           <BottomNav
             onHome={() => router.push("/home")}
             onSearchClick={toChat}

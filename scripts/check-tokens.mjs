@@ -25,7 +25,11 @@ const SKIP = [/globals\.css$/, /brand-logos/, /\/icons\.tsx$/, /lib\/design-os\.
 
 /** Arbitrary shadows that are sanctioned (brand inner stroke on gradient CTAs;
  *  the small elevation on the Toggle knob). */
-const ALLOWED_SHADOW = [/var\(--accent-teal\)/, /0px_1px_2px_rgba\(0,0,0,0\.25\)/];
+const ALLOWED_SHADOW = [
+  /var\(--accent-teal\)/,
+  /0px_1px_2px_rgba\(0,0,0,0\.25\)/, // Toggle knob
+  /0px_-10px_30px_rgba\(0,0,0,0\.1\)/, // CallbackBar upward float shadow
+];
 
 function walk(dir, out = []) {
   for (const name of readdirSync(dir)) {
