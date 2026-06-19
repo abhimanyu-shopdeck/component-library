@@ -44,6 +44,7 @@ import { ProgressBar } from "@/components/ui/progress-bar";
 import { Stepper } from "@/components/ui/stepper";
 import { InfoNote } from "@/components/ui/info-note";
 import { CallbackBar } from "@/components/ui/callback-bar";
+import { StarRating } from "@/components/ui/star-rating";
 import { SectionCard } from "@/components/ui/section-card";
 import { SectionTitle } from "@/components/ui/section-title";
 import { TextField, SelectField } from "@/components/ui/text-field";
@@ -117,6 +118,11 @@ const ICONS: { Icon: Icon; name: string }[] = [
   { Icon: Sparkle, name: "Sparkle" },
   { Icon: Trash, name: "Trash" },
 ];
+
+function StarRatingDemo() {
+  const [rating, setRating] = React.useState(4);
+  return <StarRating value={rating} onValueChange={setRating} />;
+}
 
 function SectionCardDemo() {
   const JOURNEY = [
@@ -1068,6 +1074,16 @@ const [active, setActive] = useState("Action Needed");
 <ProgressBar tone="orange" value={53} />
 <ProgressBar tone="red" value={86} />
 <ProgressBar tone="blue" value={53} />`,
+  },
+  {
+    slug: "star-rating",
+    name: "Star Rating",
+    description:
+      "Interactive 1–5 star rating (gold warning-amber stars, outline beyond the value). Controlled or uncontrolled. For feedback/NPS prompts; use DataCard ratings to display an existing rating.",
+    preview: <StarRatingDemo />,
+    code: `import { StarRating } from "@/components/ui/star-rating";
+
+<StarRating value={rating} onValueChange={setRating} />`,
   },
   {
     slug: "section-card",

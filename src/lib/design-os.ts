@@ -256,6 +256,16 @@ export const COMPONENTS: ComponentIntel[] = [
     pairsWith: ["ListContent", "CollapsibleCard"],
   },
   {
+    slug: "star-rating",
+    name: "StarRating",
+    purpose: "Capture a 1–5 star rating from the user.",
+    useWhen: ["Feedback / NPS prompts", "Rate-your-experience sheets"],
+    avoidWhen: ["Displaying an existing rating (use DataCard ratings)", "Multi-select (use Checkbox/SelectorPill)"],
+    priority: "low",
+    emotionalTone: ["expressive", "light"],
+    pairsWith: ["BottomSheet", "SelectorPill", "TextField"],
+  },
+  {
     slug: "section-card",
     name: "SectionCard",
     purpose: "A glass card with the section title inset in its header, wrapping related content.",

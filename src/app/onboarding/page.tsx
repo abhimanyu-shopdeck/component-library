@@ -16,15 +16,36 @@ import { Button } from "@/components/ui/button";
 import { Header } from "@/components/ui/header";
 import { Pill } from "@/components/ui/pill";
 import { Stepper } from "@/components/ui/stepper";
-import { SectionTitle } from "@/components/ui/section-title";
+import { SectionCard } from "@/components/ui/section-card";
 import { UserThumbnail } from "@/components/ui/user-thumbnail";
 import { BlueCardBackground } from "@/components/ui/blue-card-background";
 import { BottomNav } from "@/components/ui/bottom-nav";
 import { CallbackBar } from "@/components/ui/callback-bar";
 import { InfoNote } from "@/components/ui/info-note";
+import { BottomSheet } from "@/components/ui/bottom-sheet";
 
 const AVATAR = "https://i.pravatar.cc/120?img=47";
 const POC_AVATAR = "https://i.pravatar.cc/120?img=12";
+
+/* Service agreement shown in the "View agreement" sheet. */
+const AGREEMENT: { heading: string; body: string }[] = [
+  {
+    heading: "Scope of service",
+    body: "Shopdeck will set up, launch and manage your storefront and marketing campaigns across the agreed channels on your behalf.",
+  },
+  {
+    heading: "Fees & billing",
+    body: "Ad spend is billed at actuals; the Shopdeck management fee is a fixed percentage of monthly GMV, invoiced on the 1st of each month.",
+  },
+  {
+    heading: "Data & access",
+    body: "You grant Shopdeck access to your catalogue, ad accounts and analytics to operate campaigns. You can revoke access anytime from Settings.",
+  },
+  {
+    heading: "Cancellation",
+    body: "Either party may end this agreement with 7 days' notice. Live campaigns will be paused safely and any unused balance refunded.",
+  },
+];
 
 /* ── Your-journey vertical timeline ─────────────────────────────────── */
 type JourneyStep = { label: string; date: string; status: "done" | "ongoing" };
@@ -95,6 +116,7 @@ function JourneyTimeline({ onStep }: { onStep: () => void }) {
 export default function OnboardingScreen() {
   const router = useRouter();
   const toChat = React.useCallback(() => router.push("/chat"), [router]);
+  const [agreementOpen, setAgreementOpen] = React.useState(false);
 
   React.useEffect(() => {
     const noop = () => {};
@@ -132,7 +154,7 @@ export default function OnboardingScreen() {
         {/* Scrollable content */}
         <main className="flex-1 space-y-6 overflow-y-auto px-4 py-4">
           {/* Estimated go-live — glass card with the progress stepper */}
-          <div className="overflow-hidden rounded-2xl border border-white bg-white/50 shadow-glass">
+          <div className="overflow-hidden rounded-2xl border border-white bg-white/50">
             <div className="relative flex flex-col gap-1 p-3">
               <span className="type-caption text-text-secondary">
                 Estimated go-live
@@ -178,46 +200,70 @@ export default function OnboardingScreen() {
               <span className="type-caption text-white/70">3 days ago</span>
             </div>
             <Button
-              variant="secondary"
+              variant="on-dark"
               size="md"
-              className="mt-1 w-full text-brand-primary"
-              onClick={toChat}
+              className="mt-1 w-full"
+              onClick={() => setAgreementOpen(true)}
             >
               View agreement
             </Button>
           </BlueCardBackground>
 
           {/* Recent conversation */}
-          <section className="space-y-3">
-            <SectionTitle
-              icon={<ChatTeardropText weight="fill" />}
-              title="Recent conversation"
-            />
+          <SectionCard
+            icon={<ChatTeardropText weight="fill" />}
+            title="Recent conversation"
+          >
             <button
               type="button"
               onClick={toChat}
-              className="block w-full text-left outline-none transition-transform active:scale-[0.99]"
+              className="block w-full space-y-2.5 text-left outline-none transition-transform active:scale-[0.99]"
             >
-              <div className="space-y-2.5 rounded-2xl bg-white p-4">
-                <Pill tone="neutral" background={false} icon={<Clock />}>
-                  Jan 11, 11:50AM
-                </Pill>
-                <p className="type-body-1 text-text-primary">
-                  Porem ipsum dolor sit amet, consectetur elit. Nunc vulputate
-                  libero et velit interdum.
-                </p>
-                <InfoNote>This was discussed in the last conversation</InfoNote>
-              </div>
+              <Pill tone="neutral" background={false} icon={<Clock />}>
+                Jan 11, 11:50AM
+              </Pill>
+              <p className="type-body-1 text-text-primary">
+                Porem ipsum dolor sit amet, consectetur elit. Nunc vulputate
+                libero et velit interdum.
+              </p>
+              <InfoNote>This was discussed in the last conversation</InfoNote>
             </button>
-          </section>
+          </SectionCard>
 
           {/* Your journey */}
-          <section className="space-y-3">
-            <SectionTitle icon={<ListChecks weight="fill" />} title="Your journey" />
+          <SectionCard
+            icon={<ListChecks weight="fill" />}
+            title="Your journey"
+            surface="glass"
+          >
             <JourneyTimeline onStep={toChat} />
-          </section>
+          </SectionCard>
 
         </main>
+
+        {/* Service agreement — accept to go live */}
+        <BottomSheet
+          open={agreementOpen}
+          onOpenChange={setAgreementOpen}
+          title="Service agreement"
+          description="Please review and accept to take your store live."
+          primaryLabel="Accept & continue"
+          secondaryLabel="Decline"
+          onSecondary={() => setAgreementOpen(false)}
+          onPrimary={() => {
+            setAgreementOpen(false);
+            router.push("/before-live");
+          }}
+        >
+          <div className="flex flex-col gap-5 rounded-2xl border border-surface-muted bg-white p-5">
+            {AGREEMENT.map((s, i) => (
+              <div key={i} className="flex flex-col gap-1.5">
+                <h3 className="type-h2 text-text-primary">{s.heading}</h3>
+                <p className="type-body-1 text-text-secondary">{s.body}</p>
+              </div>
+            ))}
+          </div>
+        </BottomSheet>
 
         {/* Fixed bottom region — CallbackBar floats flush above the nav, no gap */}
         <div className="shrink-0 bg-surface-app pb-[env(safe-area-inset-bottom)]">
