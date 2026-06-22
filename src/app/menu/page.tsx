@@ -401,7 +401,7 @@ function MenuRow({
           {item.name}
         </span>
         {editable && (
-          <div className="flex shrink-0 items-center gap-5">
+          <div className="flex shrink-0 items-center gap-4">
             <button
               type="button"
               aria-label="Edit"
