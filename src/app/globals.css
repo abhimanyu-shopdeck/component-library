@@ -38,6 +38,8 @@
   --accent-teal: #87e6ed;
   --accent-violet: #8ea7ff; /* neutral text on dark surfaces */
   --accent-violet-light: #d3e3fd;
+  --accent-purple: #673ab7; /* promo callout text (e.g. Early Launch Alert) */
+  --accent-purple-light: #f6f2ff; /* promo callout surface */
 
   /* Button · primary gradient */
   --primary-from: #5b7df4;
@@ -83,6 +85,8 @@
   --color-accent-teal: var(--accent-teal);
   --color-accent-violet: var(--accent-violet);
   --color-accent-violet-light: var(--accent-violet-light);
+  --color-accent-purple: var(--accent-purple);
+  --color-accent-purple-light: var(--accent-purple-light);
   --color-primary-from: var(--primary-from);
   --color-primary-to: var(--primary-to);
 

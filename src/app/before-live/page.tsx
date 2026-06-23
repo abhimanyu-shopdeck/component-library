@@ -157,9 +157,9 @@ export default function BeforeLiveScreen() {
                 The world awaits your products.
               </p>
             </div>
-            <div className="flex flex-col gap-1 rounded-xl bg-accent-violet-light px-4 py-3 text-center">
-              <p className="type-h3 font-semibold text-accent-violet">Early Launch Alert!</p>
-              <p className="type-body-2 text-accent-violet">
+            <div className="flex flex-col gap-1 rounded-xl bg-accent-purple-light px-4 py-3 text-center">
+              <p className="type-h3 font-semibold text-accent-purple">Early Launch Alert!</p>
+              <p className="type-body-2 text-accent-purple">
                 We&apos;re super excited to report — we launched two days ahead of
                 schedule!
               </p>
