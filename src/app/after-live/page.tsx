@@ -2,18 +2,8 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import {
-  CaretRight,
-  ChartLineUp,
-  Lightbulb,
-  ListChecks,
-  Megaphone,
-  PaperPlaneTilt,
-  Sparkle,
-  SquaresFour,
-} from "@phosphor-icons/react";
+import { CaretRight, ListChecks, Megaphone } from "@phosphor-icons/react";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/ui/header";
 import { SectionCard } from "@/components/ui/section-card";
@@ -31,13 +21,13 @@ const STRATEGY_STATS = [
   { label: "Price range", value: "₹700 - ₹800" },
 ];
 
-/* Learn the basics — coloured marks on dark circles. */
-const BASICS: { label: string; icon: React.ReactNode; color: string }[] = [
-  { label: "Campaign", icon: <Sparkle weight="fill" />, color: "text-icon-gold" },
-  { label: "Strategy", icon: <Lightbulb weight="fill" />, color: "text-icon-pink" },
-  { label: "Metrics", icon: <ChartLineUp weight="fill" />, color: "text-icon-green" },
-  { label: "Scale up", icon: <PaperPlaneTilt weight="fill" />, color: "text-icon-blue" },
-  { label: "Creatives", icon: <SquaresFour weight="fill" />, color: "text-icon-rose" },
+/* Learn the basics — coloured marks on dark circles (Iconly bulk SVGs). */
+const BASICS = [
+  { label: "Campaign", src: "/icons/learn/campaign.svg" },
+  { label: "Strategy", src: "/icons/learn/strategy.svg" },
+  { label: "Metrics", src: "/icons/learn/metrics.svg" },
+  { label: "Scale up", src: "/icons/learn/scale-up.svg" },
+  { label: "Creatives", src: "/icons/learn/creatives.svg" },
 ];
 
 /* What next — go-forward roadmap (same rail pattern as before-live's journey). */
@@ -166,17 +156,11 @@ export default function AfterLiveScreen() {
                   key={b.label}
                   type="button"
                   onClick={toChat}
-                  className="flex shrink-0 flex-col items-center gap-1 outline-none transition-transform active:scale-95"
+                  className="flex shrink-0 flex-col items-center gap-2 outline-none transition-transform active:scale-95"
                 >
-                  <span className="rounded-full bg-gradient-to-b from-accent-teal to-accent-violet p-1">
-                    <span
-                      className={cn(
-                        "grid size-12 place-items-center rounded-full bg-black [&_svg]:size-7",
-                        b.color
-                      )}
-                    >
-                      {b.icon}
-                    </span>
+                  <span className="grid size-14 place-items-center rounded-full bg-black ring-[1.5px] ring-brand-primary ring-offset-[3px] ring-offset-surface-app">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={b.src} alt="" className="size-8 object-contain" />
                   </span>
                   <span className="type-caption text-text-primary">{b.label}</span>
                 </button>

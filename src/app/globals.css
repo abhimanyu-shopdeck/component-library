@@ -41,13 +41,6 @@
   --accent-purple: #673ab7; /* promo callout text (e.g. Early Launch Alert) */
   --accent-purple-light: #f6f2ff; /* promo callout surface */
 
-  /* Vivid icon accents — coloured marks on dark circles (Learn the basics) */
-  --icon-gold: #ffc53d;
-  --icon-pink: #ff5ca8;
-  --icon-green: #2fd9a0;
-  --icon-blue: #3ba8ff;
-  --icon-rose: #ff6f91;
-
   /* Button · primary gradient */
   --primary-from: #5b7df4;
   --primary-to: #4066f1;
@@ -95,11 +88,6 @@
   --color-accent-violet-light: var(--accent-violet-light);
   --color-accent-purple: var(--accent-purple);
   --color-accent-purple-light: var(--accent-purple-light);
-  --color-icon-gold: var(--icon-gold);
-  --color-icon-pink: var(--icon-pink);
-  --color-icon-green: var(--icon-green);
-  --color-icon-blue: var(--icon-blue);
-  --color-icon-rose: var(--icon-rose);
   --color-primary-from: var(--primary-from);
   --color-primary-to: var(--primary-to);
 
