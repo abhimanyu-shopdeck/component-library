@@ -47,59 +47,74 @@ const AGREEMENT: { heading: string; body: string }[] = [
   },
 ];
 
-/* ── Your-journey vertical timeline ─────────────────────────────────── */
-type JourneyStep = { label: string; date: string; status: "done" | "ongoing" };
+/* ── Your-journey vertical timeline — matches /before-live exactly ─── */
+type JourneyStep = {
+  label: string;
+  date: string;
+  status: "done" | "ongoing";
+  node: "filled" | "ring" | "target";
+};
 
 const JOURNEY: JourneyStep[] = [
-  { label: "Documents", date: "Jun 15", status: "done" },
-  { label: "Catalog", date: "Jun 15", status: "done" },
-  { label: "Website", date: "Jun 15", status: "done" },
-  { label: "Marketing", date: "Jun 15", status: "done" },
-  { label: "Launch", date: "Jun 15", status: "ongoing" },
+  { label: "Documents", date: "Jun 15", status: "done", node: "filled" },
+  { label: "Catalog", date: "Jun 15", status: "done", node: "filled" },
+  { label: "Website", date: "Jun 15", status: "done", node: "filled" },
+  { label: "Marketing", date: "Jun 15", status: "done", node: "ring" },
+  { label: "Launch", date: "Jun 15", status: "ongoing", node: "target" },
 ];
+
+function JourneyNode({ node }: { node: JourneyStep["node"] }) {
+  if (node === "filled")
+    return <span className="block size-2 rounded-full bg-brand-primary" />;
+  if (node === "target")
+    return (
+      <span className="grid size-3.5 place-items-center rounded-full border-[1.5px] border-brand-primary bg-white">
+        <span className="block size-1.5 rounded-full bg-brand-primary" />
+      </span>
+    );
+  return (
+    <span className="block size-3.5 rounded-full border-[1.5px] border-brand-primary bg-white" />
+  );
+}
 
 function JourneyTimeline({ onStep }: { onStep: () => void }) {
   return (
     <div className="flex flex-col">
       {JOURNEY.map((s, i) => {
         const isLast = i === JOURNEY.length - 1;
-        const done = s.status === "done";
-        const nextDone = !isLast && JOURNEY[i + 1].status === "done";
+        const nextFilled = !isLast && JOURNEY[i + 1].node === "filled";
         return (
-          <div key={s.label} className="relative flex items-start gap-3 pb-3 last:pb-0">
-            {/* connector to the next node — solid between done steps, dotted into the ongoing one */}
-            {!isLast && (
-              <span
-                className={cn(
-                  "absolute bottom-0 left-1 top-8 -translate-x-1/2",
-                  nextDone
-                    ? "w-0.5 rounded-full bg-brand-primary"
-                    : "w-0 border-l-2 border-dotted border-brand-primary/50"
-                )}
-              />
-            )}
-
-            {/* node */}
-            <span className="relative z-10 mt-6 shrink-0">
-              {done ? (
-                <span className="block size-2 rounded-full bg-brand-primary" />
-              ) : (
-                <span className="block size-2 rounded-full border-[1.5px] border-brand-primary bg-white" />
+          <div key={s.label} className="relative flex items-start gap-3 pb-2 last:pb-0">
+            {/* node column — self-stretch + equal 4px gaps above/below node */}
+            <div className="relative flex w-3.5 shrink-0 justify-center self-stretch">
+              {!isLast && (
+                <span
+                  className={cn(
+                    "absolute left-1/2 -bottom-7 -translate-x-1/2",
+                    s.node === "filled" ? "top-9" : "top-[42px]",
+                    nextFilled
+                      ? "w-0.5 rounded-full bg-brand-primary"
+                      : "w-0 border-l-2 border-dotted border-brand-primary/50"
+                  )}
+                />
               )}
-            </span>
+              <span className="relative z-10 mt-6">
+                <JourneyNode node={s.node} />
+              </span>
+            </div>
 
-            {/* step card */}
+            {/* step card — borderless, rounded-xl */}
             <button
               type="button"
               onClick={onStep}
-              className="flex flex-1 items-center justify-between gap-2 rounded-2xl border border-border-divider bg-white p-3 text-left outline-none transition-colors active:bg-surface-muted"
+              className="flex flex-1 items-center justify-between gap-2 rounded-xl bg-white p-3 text-left outline-none transition-colors active:bg-surface-muted"
             >
               <span className="flex min-w-0 flex-col gap-1">
                 <span className="type-caption text-text-secondary">{s.date}</span>
                 <span className="flex flex-wrap items-center gap-2">
-                  <span className="type-h2 text-text-primary">{s.label}</span>
-                  <Pill tone={done ? "success" : "neutral"} background>
-                    {done ? "Completed" : "Ongoing"}
+                  <span className="type-h2 font-medium text-text-primary">{s.label}</span>
+                  <Pill tone={s.status === "done" ? "success" : "neutral"} background>
+                    {s.status === "done" ? "Completed" : "Ongoing"}
                   </Pill>
                 </span>
               </span>
