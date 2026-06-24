@@ -38,7 +38,7 @@ const JOURNEY: JourneyStep[] = [
   { label: "Launch", date: "Jun 15", status: "ongoing", node: "target" },
 ];
 
-const ISSUES = ["POC", "Service Speed", "Website Quality", "Other"];
+const ISSUES = ["POC", "Service", "Website Quality", "Other"];
 
 function JourneyNode({ node }: { node: JourneyStep["node"] }) {
   if (node === "filled")
@@ -203,7 +203,6 @@ export default function BeforeLiveScreen() {
           open={rateOpen}
           onOpenChange={setRateOpen}
           title="How would you rate your experience?"
-          description="On a scale of 1–5, how likely are you to recommend Shopdeck to a friend?"
           primaryLabel="Submit Feedback"
           onPrimary={() => {
             setRateOpen(false);
@@ -211,10 +210,22 @@ export default function BeforeLiveScreen() {
           }}
         >
           <div className="flex flex-col gap-5">
-            <StarRating value={rating} onValueChange={setRating} className="justify-center" />
+            {/* Rating */}
+            <div className="flex flex-col gap-2">
+              <p className="type-body-1 text-text-primary">
+                How likely are you to recommend Shopdeck?
+              </p>
+              <StarRating
+                value={rating}
+                onValueChange={setRating}
+                size={50}
+                className="w-full justify-between px-1"
+              />
+            </div>
 
-            <div className="flex flex-col gap-2.5">
-              <p className="type-h3 text-text-primary">Please select one or more issues</p>
+            {/* Issues */}
+            <div className="flex flex-col gap-2">
+              <p className="type-body-1 text-text-primary">Please select one or more issues</p>
               <div className="flex flex-wrap gap-2">
                 {ISSUES.map((i) => (
                   <SelectorPill
@@ -228,14 +239,15 @@ export default function BeforeLiveScreen() {
               </div>
             </div>
 
-            <div className="flex flex-col gap-2.5">
-              <p className="type-h3 text-text-primary">Tell us more</p>
+            {/* Free text */}
+            <div className="flex flex-col gap-2">
+              <p className="type-body-1 text-text-primary">Tell us more</p>
               <textarea
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
                 placeholder="Type here"
                 rows={3}
-                className="w-full resize-none rounded-lg border border-divider bg-white p-3 type-body-1 text-text-primary outline-none transition-colors placeholder:text-text-secondary focus:border-brand-primary"
+                className="h-20 w-full resize-none rounded-xl border border-border-divider bg-white px-3 pt-2.5 type-body-1 text-text-primary outline-none transition-colors placeholder:text-text-secondary focus:border-brand-primary"
               />
             </div>
           </div>

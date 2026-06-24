@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { Star } from "@phosphor-icons/react";
 
 import { cn } from "@/lib/utils";
 
@@ -11,19 +10,23 @@ type StarRatingProps = {
   onValueChange?: (value: number) => void;
   /** Number of stars. Defaults to 5. */
   max?: number;
+  /** Star size in px. Defaults to 36. */
+  size?: number;
   className?: string;
 };
 
 /**
- * Interactive star rating — gold (`warning-amber`) filled stars up to the
- * selected value, outline beyond. Controlled (`value`) or uncontrolled
- * (`defaultValue`). For a read-only rating display, use `DataCard type="ratings"`.
+ * Interactive star rating — hand-drawn gold stars (filled) up to the selected
+ * value, grey default beyond (Figma star SVGs). Controlled (`value`) or
+ * uncontrolled (`defaultValue`). For a read-only display, use
+ * `DataCard type="ratings"`.
  */
 function StarRating({
   value,
   defaultValue = 0,
   onValueChange,
   max = 5,
+  size = 36,
   className,
 }: StarRatingProps) {
   const [internal, setInternal] = React.useState(defaultValue);
@@ -51,11 +54,15 @@ function StarRating({
             aria-checked={n === current}
             aria-label={`${n} star${n > 1 ? "s" : ""}`}
             onClick={() => select(n)}
-            className="rounded outline-none transition-transform active:scale-90 focus-visible:ring-2 focus-visible:ring-accent-violet-light [&_svg]:size-9"
+            className="rounded-md outline-none transition-transform active:scale-90 focus-visible:ring-2 focus-visible:ring-accent-violet-light"
           >
-            <Star
-              weight={filled ? "fill" : "regular"}
-              className={filled ? "text-warning-amber" : "text-warning-amber/40"}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={filled ? "/icons/star-filled.svg" : "/icons/star-default.svg"}
+              alt=""
+              draggable={false}
+              style={{ width: size, height: size }}
+              className="block select-none"
             />
           </button>
         );
