@@ -143,17 +143,15 @@ export default function CampaignLiveScreen() {
                 the next campaign is even stronger. Watch this space.
               </p>
             </div>
+            <Button
+              variant="primary"
+              size="md"
+              className="w-full"
+              onClick={() => router.push("/marketing-live")}
+            >
+              Ok, Notify Me
+            </Button>
           </div>
-
-          {/* Ok, Notify Me — standalone button below card */}
-          <Button
-            variant="primary"
-            size="lg"
-            className="w-full"
-            onClick={() => router.push("/marketing-live")}
-          >
-            Ok, Notify Me
-          </Button>
 
           {/* Learn the basics */}
           <section className="space-y-3">

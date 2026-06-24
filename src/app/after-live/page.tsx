@@ -291,6 +291,9 @@ export default function AfterLiveScreen() {
                     learn — so the next campaign is even stronger. Watch this space.
                   </p>
                 </div>
+                <Button variant="primary" size="md" className="w-full" disabled>
+                  Ok, Notify Me
+                </Button>
               </div>
             )}
           </div>
