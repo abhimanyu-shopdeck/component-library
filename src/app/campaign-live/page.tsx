@@ -155,7 +155,7 @@ export default function CampaignLiveScreen() {
 
           {/* Learn the basics */}
           <section className="space-y-3">
-            <h2 className="type-h1 text-text-primary">Learn the basics</h2>
+            <h2 className="type-h2 text-text-primary">Learn the basics</h2>
             <div className="-mx-4 flex gap-4 overflow-x-auto px-4 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {BASICS.map((b) => (
                 <button
