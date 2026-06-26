@@ -2,11 +2,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import {
-  CheckCircle,
-  ListChecks,
-  Megaphone,
-} from "@phosphor-icons/react";
+import { ListChecks, Megaphone } from "@phosphor-icons/react";
 import dynamic from "next/dynamic";
 
 import { Button } from "@/components/ui/button";
@@ -17,6 +13,11 @@ import { BottomNav } from "@/components/ui/bottom-nav";
 
 const RadarLoader = dynamic(
   () => import("@/components/radar-loader").then((m) => m.RadarLoader),
+  { ssr: false }
+);
+
+const SuccessConfetti = dynamic(
+  () => import("@/components/success-confetti").then((m) => m.SuccessConfetti),
   { ssr: false }
 );
 
@@ -209,7 +210,7 @@ export default function PocChangeScreen() {
 
         {/* ── Layer 3 (top): notification content, above the gradient PNG ── */}
         <div className="absolute inset-x-5 bottom-[calc(73px+env(safe-area-inset-bottom)+16px)] z-20 flex flex-col gap-3">
-          <CheckCircle weight="fill" className="size-[70px] text-success" />
+          <SuccessConfetti className="size-[120px]" />
 
           <div className="flex items-center justify-between gap-3">
             <div className="flex min-w-0 flex-1 flex-col gap-1">
@@ -229,7 +230,7 @@ export default function PocChangeScreen() {
               size="lg"
               onClick={() => router.push("/after-live")}
             >
-              TAP TO DISMISS
+              Tap to Dismiss
             </Button>
           </div>
         </div>
