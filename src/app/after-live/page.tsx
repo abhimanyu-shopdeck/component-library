@@ -13,6 +13,11 @@ const RadarLoader = dynamic(
   () => import("@/components/radar-loader").then((m) => m.RadarLoader),
   { ssr: false }
 );
+
+const SuccessConfetti = dynamic(
+  () => import("@/components/success-confetti").then((m) => m.SuccessConfetti),
+  { ssr: false }
+);
 import { SectionCard } from "@/components/ui/section-card";
 import { UserThumbnail } from "@/components/ui/user-thumbnail";
 import { BottomNav } from "@/components/ui/bottom-nav";
@@ -208,6 +213,14 @@ export default function AfterLiveScreen() {
       }, 380);
     }
   };
+
+  /* POC-change overlay — shows automatically after 10 s on this page */
+  const [showPocOverlay, setShowPocOverlay] = React.useState(false);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setShowPocOverlay(true), 10_000);
+    return () => clearTimeout(timer);
+  }, []);
 
   React.useEffect(() => {
     const noop = () => {};
@@ -619,6 +632,49 @@ export default function AfterLiveScreen() {
             })}
           </div>
         </BottomSheet>
+
+        {/* ── POC-change overlay — appears after 10 s, animate-in from bottom ── */}
+        {showPocOverlay && (
+          <div className="absolute inset-0 z-50 overflow-hidden motion-safe:animate-sheet-up">
+            {/* Gradient: transparent top → solid ice-blue bottom */}
+            <div
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(to bottom, transparent 0%, transparent 30%, #f0faff 58%, #d9f4ff 100%)",
+              }}
+            />
+
+            {/* Full-width confetti animation */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-[calc(23px+env(safe-area-inset-bottom)+140px)] w-full">
+              <SuccessConfetti className="w-full" />
+            </div>
+
+            {/* Notification: text + avatar + dismiss button */}
+            <div className="absolute inset-x-5 bottom-[calc(23px+env(safe-area-inset-bottom)+16px)] flex flex-col gap-3">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex min-w-0 flex-1 flex-col gap-1">
+                  <h2 className="type-h1 text-text-primary">Congrats! Your store is live.</h2>
+                  <p className="type-body-2 text-text-secondary">
+                    Anjali handed you over to{" "}
+                    <span className="font-medium text-text-primary">Arunabh Singh,</span>{" "}
+                    Growth Consultant
+                  </p>
+                </div>
+                <UserThumbnail src={POC_AVATAR} size={48} className="shrink-0" />
+              </div>
+              <div>
+                <Button
+                  variant="primary"
+                  size="lg"
+                  onClick={() => setShowPocOverlay(false)}
+                >
+                  Tap to Dismiss
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
