@@ -208,10 +208,13 @@ export default function PocChangeScreen() {
           }}
         />
 
-        {/* ── Layer 3 (top): notification content, above the gradient PNG ── */}
-        <div className="absolute inset-x-5 bottom-[calc(73px+env(safe-area-inset-bottom)+16px)] z-20 flex flex-col gap-3">
-          <SuccessConfetti className="size-[120px]" />
+        {/* ── Layer 3a: full-width confetti animation ── */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-[calc(73px+env(safe-area-inset-bottom)+140px)] z-20 w-full">
+          <SuccessConfetti className="w-full" />
+        </div>
 
+        {/* ── Layer 3b: notification text + button (inset-x-5) ── */}
+        <div className="absolute inset-x-5 bottom-[calc(73px+env(safe-area-inset-bottom)+16px)] z-20 flex flex-col gap-3">
           <div className="flex items-center justify-between gap-3">
             <div className="flex min-w-0 flex-1 flex-col gap-1">
               <h2 className="type-h1 text-text-primary">Congrats! Your store is live.</h2>
