@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-import { CaretRight, CheckCircle, ListChecks, Megaphone, PencilSimple } from "@phosphor-icons/react";
+import { CheckCircle, ListChecks, Megaphone, PencilSimple } from "@phosphor-icons/react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ const RadarLoader = dynamic(
 import { SectionCard } from "@/components/ui/section-card";
 import { UserThumbnail } from "@/components/ui/user-thumbnail";
 import { BottomNav } from "@/components/ui/bottom-nav";
+import { CallbackBar } from "@/components/ui/callback-bar";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { SelectField, TextField } from "@/components/ui/text-field";
 import { SelectorPill } from "@/components/ui/selector-pill";
@@ -236,24 +237,6 @@ export default function AfterLiveScreen() {
 
         {/* Scrollable content */}
         <main className="flex-1 space-y-6 overflow-y-auto px-4 py-4">
-          {/* Handover card — store is live */}
-          <button
-            type="button"
-            onClick={toChat}
-            className="flex w-full items-center gap-3 rounded-2xl bg-white p-3 text-left outline-none transition-transform active:scale-[0.99]"
-          >
-            <UserThumbnail src={POC_AVATAR} size={48} />
-            <div className="flex min-w-0 flex-1 flex-col">
-              <span className="type-h2 text-text-primary">Your store is live.</span>
-              <span className="type-body-2 text-text-secondary">
-                Anjali handed you over to{" "}
-                <span className="font-semibold text-text-primary">Arunabh</span>, Growth
-                Consultant
-              </span>
-            </div>
-            <CaretRight weight="bold" className="size-4 shrink-0 text-text-secondary" />
-          </button>
-
           {/* Card slot — fixed height so neither card causes layout shift.
               Both cards are absolute inset-0; height is set to the white card's
               natural size (328px) so the surrounding content never moves. */}
@@ -423,8 +406,14 @@ export default function AfterLiveScreen() {
           </SectionCard>
         </main>
 
-        {/* Bottom nav */}
+        {/* CallbackBar + Bottom nav */}
         <div className="shrink-0 bg-surface-app pb-[env(safe-area-inset-bottom)]">
+          <CallbackBar
+            src={POC_AVATAR}
+            title="Call Anirudh"
+            description="for any kind of assistance during onboarding"
+            onCall={toChat}
+          />
           <BottomNav
             onHome={() => router.push("/home")}
             onSearchClick={toChat}
