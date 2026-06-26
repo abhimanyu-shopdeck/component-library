@@ -218,7 +218,7 @@ export default function AfterLiveScreen() {
   const [showPocOverlay, setShowPocOverlay] = React.useState(false);
 
   React.useEffect(() => {
-    const timer = setTimeout(() => setShowPocOverlay(true), 10_000);
+    const timer = setTimeout(() => setShowPocOverlay(true), 1_000);
     return () => clearTimeout(timer);
   }, []);
 
